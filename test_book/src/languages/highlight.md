@@ -146,12 +146,12 @@ body,
   --heading-1: 30px/32px Helvetica, sans-serif;
 }
 
-@import url(print.css);
+/* @import url(print.css); 
 @media print {
   a[href^='http']::after {
     content: attr(href);
   }
-}
+} */
 ```
 
 ## d

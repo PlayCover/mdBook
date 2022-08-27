@@ -117,27 +117,6 @@ fn check_correct_cross_links_in_nested_dir() {
 }
 
 #[test]
-fn check_correct_relative_links_in_print_page() {
-    let temp = DummyBook::new().build().unwrap();
-    let md = MDBook::load(temp.path()).unwrap();
-    md.build().unwrap();
-
-    let first = temp.path().join("book");
-
-    assert_contains_strings(
-        first.join("print.html"),
-        &[
-            r##"<a href="second/../first/nested.html">the first section</a>,"##,
-            r##"<a href="second/../../std/foo/bar.html">outside</a>"##,
-            r##"<img src="second/../images/picture.png" alt="Some image" />"##,
-            r##"<a href="second/nested.html#some-section">fragment link</a>"##,
-            r##"<a href="second/../first/markdown.html">HTML Link</a>"##,
-            r##"<img src="second/../images/picture.png" alt="raw html">"##,
-        ],
-    );
-}
-
-#[test]
 fn rendered_code_has_playground_stuff() {
     let temp = DummyBook::new().build().unwrap();
     let md = MDBook::load(temp.path()).unwrap();
@@ -427,24 +406,6 @@ fn example_book_can_build() {
 }
 
 #[test]
-fn book_with_a_reserved_filename_does_not_build() {
-    let tmp_dir = TempFileBuilder::new().prefix("mdBook").tempdir().unwrap();
-    let src_path = tmp_dir.path().join("src");
-    fs::create_dir(&src_path).unwrap();
-
-    let summary_path = src_path.join("SUMMARY.md");
-    let print_path = src_path.join("print.md");
-
-    fs::File::create(print_path).unwrap();
-    let mut summary_file = fs::File::create(summary_path).unwrap();
-    writeln!(summary_file, "[print](print.md)").unwrap();
-
-    let md = MDBook::load(tmp_dir.path()).unwrap();
-    let got = md.build();
-    assert!(got.is_err());
-}
-
-#[test]
 fn by_default_mdbook_use_index_preprocessor_to_convert_readme_to_index() {
     let temp = DummyBook::new().build().unwrap();
     let mut cfg = Config::default();
@@ -498,19 +459,6 @@ fn theme_dir_overrides_work_correctly() {
 
     let built_index = book_dir.join("book").join("index.html");
     dummy_book::assert_contains_strings(built_index, &["This is a modified index.hbs!"]);
-}
-
-#[test]
-fn no_index_for_print_html() {
-    let temp = DummyBook::new().build().unwrap();
-    let md = MDBook::load(temp.path()).unwrap();
-    md.build().unwrap();
-
-    let print_html = temp.path().join("book/print.html");
-    assert_contains_strings(print_html, &[r##"noindex"##]);
-
-    let index_html = temp.path().join("book/index.html");
-    assert_doesnt_contain_strings(index_html, &[r##"noindex"##]);
 }
 
 #[test]

@@ -501,7 +501,7 @@ pub struct HtmlConfig {
     #[serde(alias = "playpen")]
     pub playground: Playground,
     /// Print settings.
-    pub print: Print,
+    // pub print: Print,
     /// Don't render section labels.
     pub no_section_label: bool,
     /// Search settings. If `None`, the default will be used.
@@ -553,7 +553,7 @@ impl Default for HtmlConfig {
             additional_js: Vec::new(),
             fold: Fold::default(),
             playground: Playground::default(),
-            print: Print::default(),
+            // print: Print::default(),
             no_section_label: false,
             search: None,
             git_repository_url: None,
@@ -580,23 +580,23 @@ impl HtmlConfig {
 }
 
 /// Configuration for how to render the print icon, print.html, and print.css.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(default, rename_all = "kebab-case")]
-pub struct Print {
-    /// Whether print support is enabled.
-    pub enable: bool,
-    /// Insert page breaks between chapters. Default: `true`.
-    pub page_break: bool,
-}
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+// #[serde(default, rename_all = "kebab-case")]
+// pub struct Print {
+//     /// Whether print support is enabled.
+//     pub enable: bool,
+//     /// Insert page breaks between chapters. Default: `true`.
+//     pub page_break: bool,
+// }
 
-impl Default for Print {
-    fn default() -> Self {
-        Self {
-            enable: true,
-            page_break: true,
-        }
-    }
-}
+// impl Default for Print {
+//     fn default() -> Self {
+//         Self {
+//             enable: true,
+//             page_break: true,
+//         }
+//     }
+// }
 
 /// Configuration for how to fold chapters of sidebar.
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1168,23 +1168,23 @@ mod tests {
         Config::from_str(src).unwrap();
     }
 
-    #[test]
-    fn print_config() {
-        let src = r#"
-        [output.html.print]
-        enable = false
-        "#;
-        let got = Config::from_str(src).unwrap();
-        let html_config = got.html_config().unwrap();
-        assert!(!html_config.print.enable);
-        assert!(html_config.print.page_break);
-        let src = r#"
-        [output.html.print]
-        page-break = false
-        "#;
-        let got = Config::from_str(src).unwrap();
-        let html_config = got.html_config().unwrap();
-        assert!(html_config.print.enable);
-        assert!(!html_config.print.page_break);
-    }
+    // #[test]
+    // fn print_config() {
+    //     let src = r#"
+    //     [output.html.print]
+    //     enable = false
+    //     "#;
+    //     let got = Config::from_str(src).unwrap();
+    //     let html_config = got.html_config().unwrap();
+    //     assert!(!html_config.print.enable);
+    //     assert!(html_config.print.page_break);
+    //     let src = r#"
+    //     [output.html.print]
+    //     page-break = false
+    //     "#;
+    //     let got = Config::from_str(src).unwrap();
+    //     let html_config = got.html_config().unwrap();
+    //     assert!(html_config.print.enable);
+    //     assert!(!html_config.print.page_break);
+    // }
 }

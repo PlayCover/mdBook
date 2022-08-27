@@ -464,14 +464,6 @@ function playground_text(playground) {
     });
 })();
 
-(function scrollToTop () {
-    var menuTitle = document.querySelector('.menu-title');
-
-    menuTitle.addEventListener('click', function () {
-        document.scrollingElement.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-})();
-
 (function controllMenu() {
     var menu = document.getElementById('menu-bar');
 

@@ -12,27 +12,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [stable, beta, nightly, macos, windows, msrv]
+        build: [stable, macos]
         include:
           - build: stable
             os: ubuntu-latest
             rust: stable
-          - build: beta
-            os: ubuntu-latest
-            rust: beta
-          - build: nightly
-            os: ubuntu-latest
-            rust: nightly
           - build: macos
             os: macos-latest
             rust: stable
-          - build: windows
-            os: windows-latest
-            rust: stable
-          - build: msrv
-            os: ubuntu-latest
-            # sync MSRV with docs: guide/src/guide/installation.md
-            rust: 1.54.0
     steps:
     - uses: actions/checkout@master
     - name: Install Rust

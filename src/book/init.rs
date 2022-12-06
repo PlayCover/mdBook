@@ -135,10 +135,10 @@ impl BookBuilder {
         let mut chrome_css = File::create(cssdir.join("chrome.css"))?;
         chrome_css.write_all(theme::CHROME_CSS)?;
 
-        if html_config.print.enable {
-            let mut print_css = File::create(cssdir.join("print.css"))?;
-            print_css.write_all(theme::PRINT_CSS)?;
-        }
+        // if html_config.print.enable {
+        //     let mut print_css = File::create(cssdir.join("print.css"))?;
+        //     print_css.write_all(theme::PRINT_CSS)?;
+        // }
 
         let mut variables_css = File::create(cssdir.join("variables.css"))?;
         variables_css.write_all(theme::VARIABLES_CSS)?;

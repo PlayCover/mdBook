@@ -32,12 +32,12 @@ function playground_text(playground) {
             method: 'POST',
             mode: 'cors',
         })
-        .then(response => response.json())
-        .then(response => {
-            // get list of crates available in the rust playground
-            let playground_crates = response.crates.map(item => item["id"]);
-            playgrounds.forEach(block => handle_crate_list_update(block, playground_crates));
-        });
+            .then(response => response.json())
+            .then(response => {
+                // get list of crates available in the rust playground
+                let playground_crates = response.crates.map(item => item["id"]);
+                playgrounds.forEach(block => handle_crate_list_update(block, playground_crates));
+            });
     }
 
     function handle_crate_list_update(playground_block, playground_crates) {
@@ -109,9 +109,9 @@ function playground_text(playground) {
         let text = playground_text(code_block);
         let classes = code_block.querySelector('code').classList;
         let edition = "2015";
-        if(classes.contains("edition2018")) {
+        if (classes.contains("edition2018")) {
             edition = "2018";
-        } else if(classes.contains("edition2021")) {
+        } else if (classes.contains("edition2021")) {
             edition = "2021";
         }
         var params = {
@@ -135,17 +135,17 @@ function playground_text(playground) {
             mode: 'cors',
             body: JSON.stringify(params)
         })
-        .then(response => response.json())
-        .then(response => {
-            if (response.result.trim() === '') {
-                result_block.innerText = "No output";
-                result_block.classList.add("result-no-output");
-            } else {
-                result_block.innerText = response.result;
-                result_block.classList.remove("result-no-output");
-            }
-        })
-        .catch(error => result_block.innerText = "Playground Communication: " + error.message);
+            .then(response => response.json())
+            .then(response => {
+                if (response.result.trim() === '') {
+                    result_block.innerText = "No output";
+                    result_block.classList.add("result-no-output");
+                } else {
+                    result_block.innerText = response.result;
+                    result_block.classList.remove("result-no-output");
+                }
+            })
+            .catch(error => result_block.innerText = "Playground Communication: " + error.message);
     }
 
     // Syntax highlighting Configuration
@@ -157,17 +157,17 @@ function playground_text(playground) {
     let code_nodes = Array
         .from(document.querySelectorAll('code'))
         // Don't highlight `inline code` blocks in headers.
-        .filter(function (node) {return !node.parentElement.classList.contains("header"); });
+        .filter(function (node) { return !node.parentElement.classList.contains("header"); });
 
     if (window.ace) {
         // language-rust class needs to be removed for editable
         // blocks or highlightjs will capture events
         code_nodes
-            .filter(function (node) {return node.classList.contains("editable"); })
+            .filter(function (node) { return node.classList.contains("editable"); })
             .forEach(function (block) { block.classList.remove('language-rust'); });
 
         code_nodes
-            .filter(function (node) {return !node.classList.contains("editable"); })
+            .filter(function (node) { return !node.classList.contains("editable"); })
             .forEach(function (block) { hljs.highlightBlock(block); });
     } else {
         code_nodes.forEach(function (block) { hljs.highlightBlock(block); });
@@ -278,162 +278,6 @@ function playground_text(playground) {
                 editor.setValue(editor.originalCode);
                 editor.clearSelection();
             });
-        }
-    });
-})();
-
-(function themes() {
-    var html = document.querySelector('html');
-    var themeToggleButton = document.getElementById('theme-toggle');
-    var themePopup = document.getElementById('theme-list');
-    var themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
-    var stylesheets = {
-        ayuHighlight: document.querySelector("[href$='ayu-highlight.css']"),
-        tomorrowNight: document.querySelector("[href$='tomorrow-night.css']"),
-        highlight: document.querySelector("[href$='highlight.css']"),
-    };
-
-    function showThemes() {
-        themePopup.style.display = 'block';
-        themeToggleButton.setAttribute('aria-expanded', true);
-        themePopup.querySelector("button#" + get_theme()).focus();
-    }
-
-    function updateThemeSelected() {
-        themePopup.querySelectorAll('.theme-selected').forEach(function (el) {
-            el.classList.remove('theme-selected');
-        });
-        themePopup.querySelector("button#" + get_theme()).classList.add('theme-selected');
-    }
-
-    function hideThemes() {
-        themePopup.style.display = 'none';
-        themeToggleButton.setAttribute('aria-expanded', false);
-        themeToggleButton.focus();
-    }
-
-    function get_theme() {
-        var theme;
-        try { theme = localStorage.getItem('mdbook-theme'); } catch (e) { }
-        if (theme === null || theme === undefined) {
-            return default_theme;
-        } else {
-            return theme;
-        }
-    }
-
-    function set_theme(theme, store = true) {
-        let ace_theme;
-
-        if (theme == 'coal' || theme == 'navy') {
-            stylesheets.ayuHighlight.disabled = true;
-            stylesheets.tomorrowNight.disabled = false;
-            stylesheets.highlight.disabled = true;
-
-            ace_theme = "ace/theme/tomorrow_night";
-        } else if (theme == 'ayu') {
-            stylesheets.ayuHighlight.disabled = false;
-            stylesheets.tomorrowNight.disabled = true;
-            stylesheets.highlight.disabled = true;
-            ace_theme = "ace/theme/tomorrow_night";
-        } else {
-            stylesheets.ayuHighlight.disabled = true;
-            stylesheets.tomorrowNight.disabled = true;
-            stylesheets.highlight.disabled = false;
-            ace_theme = "ace/theme/dawn";
-        }
-
-        setTimeout(function () {
-            themeColorMetaTag.content = getComputedStyle(document.body).backgroundColor;
-        }, 1);
-
-        if (window.ace && window.editors) {
-            window.editors.forEach(function (editor) {
-                editor.setTheme(ace_theme);
-            });
-        }
-
-        var previousTheme = get_theme();
-
-        if (store) {
-            try { localStorage.setItem('mdbook-theme', theme); } catch (e) { }
-        }
-
-        html.classList.remove(previousTheme);
-        html.classList.add(theme);
-        updateThemeSelected();
-    }
-
-    // Set theme
-    var theme = get_theme();
-
-    set_theme(theme, false);
-
-    themeToggleButton.addEventListener('click', function () {
-        if (themePopup.style.display === 'block') {
-            hideThemes();
-        } else {
-            showThemes();
-        }
-    });
-
-    themePopup.addEventListener('click', function (e) {
-        var theme;
-        if (e.target.className === "theme") {
-            theme = e.target.id;
-        } else if (e.target.parentElement.className === "theme") {
-            theme = e.target.parentElement.id;
-        } else {
-            return;
-        }
-        set_theme(theme);
-    });
-
-    themePopup.addEventListener('focusout', function(e) {
-        // e.relatedTarget is null in Safari and Firefox on macOS (see workaround below)
-        if (!!e.relatedTarget && !themeToggleButton.contains(e.relatedTarget) && !themePopup.contains(e.relatedTarget)) {
-            hideThemes();
-        }
-    });
-
-    // Should not be needed, but it works around an issue on macOS & iOS: https://github.com/rust-lang/mdBook/issues/628
-    document.addEventListener('click', function(e) {
-        if (themePopup.style.display === 'block' && !themeToggleButton.contains(e.target) && !themePopup.contains(e.target)) {
-            hideThemes();
-        }
-    });
-
-    document.addEventListener('keydown', function (e) {
-        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) { return; }
-        if (!themePopup.contains(e.target)) { return; }
-
-        switch (e.key) {
-            case 'Escape':
-                e.preventDefault();
-                hideThemes();
-                break;
-            case 'ArrowUp':
-                e.preventDefault();
-                var li = document.activeElement.parentElement;
-                if (li && li.previousElementSibling) {
-                    li.previousElementSibling.querySelector('button').focus();
-                }
-                break;
-            case 'ArrowDown':
-                e.preventDefault();
-                var li = document.activeElement.parentElement;
-                if (li && li.nextElementSibling) {
-                    li.nextElementSibling.querySelector('button').focus();
-                }
-                break;
-            case 'Home':
-                e.preventDefault();
-                themePopup.querySelector('li:first-child button').focus();
-                break;
-            case 'End':
-                e.preventDefault();
-                themePopup.querySelector('li:last-child button').focus();
-                break;
         }
     });
 })();
@@ -616,14 +460,6 @@ function playground_text(playground) {
 
     clipboardSnippets.on('error', function (e) {
         showTooltip(e.trigger, "Clipboard error!");
-    });
-})();
-
-(function scrollToTop () {
-    var menuTitle = document.querySelector('.menu-title');
-
-    menuTitle.addEventListener('click', function () {
-        document.scrollingElement.scrollTo({ top: 0, behavior: 'smooth' });
     });
 })();
 

@@ -19,7 +19,7 @@ pub static REDIRECT: &[u8] = include_bytes!("redirect.hbs");
 pub static HEADER: &[u8] = include_bytes!("header.hbs");
 pub static CHROME_CSS: &[u8] = include_bytes!("css/chrome.css");
 pub static GENERAL_CSS: &[u8] = include_bytes!("css/general.css");
-pub static PRINT_CSS: &[u8] = include_bytes!("css/print.css");
+// pub static PRINT_CSS: &[u8] = include_bytes!("css/print.css");
 pub static VARIABLES_CSS: &[u8] = include_bytes!("css/variables.css");
 pub static FAVICON_PNG: &[u8] = include_bytes!("favicon.png");
 pub static FAVICON_SVG: &[u8] = include_bytes!("favicon.svg");
@@ -52,7 +52,7 @@ pub struct Theme {
     pub header: Vec<u8>,
     pub chrome_css: Vec<u8>,
     pub general_css: Vec<u8>,
-    pub print_css: Vec<u8>,
+    // pub print_css: Vec<u8>,
     pub variables_css: Vec<u8>,
     pub favicon_png: Option<Vec<u8>>,
     pub favicon_svg: Option<Vec<u8>>,
@@ -86,7 +86,7 @@ impl Theme {
                 (theme_dir.join("book.js"), &mut theme.js),
                 (theme_dir.join("css/chrome.css"), &mut theme.chrome_css),
                 (theme_dir.join("css/general.css"), &mut theme.general_css),
-                (theme_dir.join("css/print.css"), &mut theme.print_css),
+                // (theme_dir.join("css/print.css"), &mut theme.print_css),
                 (
                     theme_dir.join("css/variables.css"),
                     &mut theme.variables_css,
@@ -151,7 +151,7 @@ impl Default for Theme {
             header: HEADER.to_owned(),
             chrome_css: CHROME_CSS.to_owned(),
             general_css: GENERAL_CSS.to_owned(),
-            print_css: PRINT_CSS.to_owned(),
+            // print_css: PRINT_CSS.to_owned(),
             variables_css: VARIABLES_CSS.to_owned(),
             favicon_png: Some(FAVICON_PNG.to_owned()),
             favicon_svg: Some(FAVICON_SVG.to_owned()),
@@ -211,7 +211,7 @@ mod tests {
             "css/chrome.css",
             "css/fonts.css",
             "css/general.css",
-            "css/print.css",
+            // "css/print.css",
             "css/variables.css",
             "book.js",
             "highlight.js",
@@ -238,7 +238,7 @@ mod tests {
             header: Vec::new(),
             chrome_css: Vec::new(),
             general_css: Vec::new(),
-            print_css: Vec::new(),
+            // print_css: Vec::new(),
             variables_css: Vec::new(),
             favicon_png: Some(Vec::new()),
             favicon_svg: Some(Vec::new()),

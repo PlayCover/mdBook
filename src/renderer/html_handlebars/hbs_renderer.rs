@@ -59,13 +59,13 @@ impl HtmlHandlebars {
 
         let fixed_content =
             utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
-        if !ctx.is_index && ctx.html_config.print.page_break {
-            // Add page break between chapters
-            // See https://developer.mozilla.org/en-US/docs/Web/CSS/break-before and https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before
-            // Add both two CSS properties because of the compatibility issue
-            print_content
-                .push_str(r#"<div style="break-before: page; page-break-before: always;"></div>"#);
-        }
+        // if !ctx.is_index && ctx.html_config.print.page_break {
+        //     // Add page break between chapters
+        //     // See https://developer.mozilla.org/en-US/docs/Web/CSS/break-before and https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before
+        //     // Add both two CSS properties because of the compatibility issue
+        //     print_content
+        //         .push_str(r#"<div style="break-before: page; page-break-before: always;"></div>"#);
+        // }
         print_content.push_str(&fixed_content);
 
         // Update the context with data for this file
@@ -75,9 +75,9 @@ impl HtmlHandlebars {
         let filepath = Path::new(&ctx_path).with_extension("html");
 
         // "print.html" is used for the print page.
-        if path == Path::new("print.md") {
-            bail!("{} is reserved for internal use", path.display());
-        };
+        // if path == Path::new("print.md") {
+        //     bail!("{} is reserved for internal use", path.display());
+        // };
 
         let book_title = ctx
             .data
@@ -225,9 +225,9 @@ impl HtmlHandlebars {
         write_file(destination, "book.js", &theme.js)?;
         write_file(destination, "css/general.css", &theme.general_css)?;
         write_file(destination, "css/chrome.css", &theme.chrome_css)?;
-        if html_config.print.enable {
-            write_file(destination, "css/print.css", &theme.print_css)?;
-        }
+        // if html_config.print.enable {
+        //     write_file(destination, "css/print.css", &theme.print_css)?;
+        // }
         write_file(destination, "css/variables.css", &theme.variables_css)?;
         if let Some(contents) = &theme.favicon_png {
             write_file(destination, "favicon.png", contents)?;
@@ -314,22 +314,22 @@ impl HtmlHandlebars {
     }
 
     /// Update the context with data for this file
-    fn configure_print_version(
-        &self,
-        data: &mut serde_json::Map<String, serde_json::Value>,
-        print_content: &str,
-    ) {
-        // Make sure that the Print chapter does not display the title from
-        // the last rendered chapter by removing it from its context
-        data.remove("title");
-        data.insert("is_print".to_owned(), json!(true));
-        data.insert("path".to_owned(), json!("print.md"));
-        data.insert("content".to_owned(), json!(print_content));
-        data.insert(
-            "path_to_root".to_owned(),
-            json!(utils::fs::path_to_root(Path::new("print.md"))),
-        );
-    }
+    // fn configure_print_version(
+    //     &self,
+    //     data: &mut serde_json::Map<String, serde_json::Value>,
+    //     print_content: &str,
+    // ) {
+    //     // Make sure that the Print chapter does not display the title from
+    //     // the last rendered chapter by removing it from its context
+    //     data.remove("title");
+    //     data.insert("is_print".to_owned(), json!(true));
+    //     data.insert("path".to_owned(), json!("print.md"));
+    //     data.insert("content".to_owned(), json!(print_content));
+    //     data.insert(
+    //         "path_to_root".to_owned(),
+    //         json!(utils::fs::path_to_root(Path::new("print.md"))),
+    //     );
+    // }
 
     fn register_hbs_helpers(&self, handlebars: &mut Handlebars<'_>, html_config: &HtmlConfig) {
         handlebars.register_helper(
@@ -554,22 +554,22 @@ impl Renderer for HtmlHandlebars {
         }
 
         // Print version
-        self.configure_print_version(&mut data, &print_content);
-        if let Some(ref title) = ctx.config.book.title {
-            data.insert("title".to_owned(), json!(title));
-        }
+        // self.configure_print_version(&mut data, &print_content);
+        // if let Some(ref title) = ctx.config.book.title {
+        //     data.insert("title".to_owned(), json!(title));
+        // }
 
         // Render the handlebars template with the data
-        if html_config.print.enable {
-            debug!("Render template");
-            let rendered = handlebars.render("index", &data)?;
+        // if html_config.print.enable {
+        //     debug!("Render template");
+        //     let rendered = handlebars.render("index", &data)?;
 
-            let rendered =
-                self.post_process(rendered, &html_config.playground, ctx.config.rust.edition);
+        //     let rendered =
+        //         self.post_process(rendered, &html_config.playground, ctx.config.rust.edition);
 
-            utils::fs::write_file(destination, "print.html", rendered.as_bytes())?;
-            debug!("Creating print.html ✓");
-        }
+        //     utils::fs::write_file(destination, "print.html", rendered.as_bytes())?;
+        //     debug!("Creating print.html ✓");
+        // }
 
         debug!("Copy static files");
         self.copy_static_files(destination, &theme, &html_config)
@@ -694,7 +694,7 @@ fn make_data(
         data.insert("playground_copyable".to_owned(), json!(true));
     }
 
-    data.insert("print_enable".to_owned(), json!(html_config.print.enable));
+    // data.insert("print_enable".to_owned(), json!(html_config.print.enable));
     data.insert("fold_enable".to_owned(), json!(html_config.fold.enable));
     data.insert("fold_level".to_owned(), json!(html_config.fold.level));
 
